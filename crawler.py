@@ -7,7 +7,6 @@ def request(url):
     except requests.exceptions.ConnectionError:
         pass
 
-
 target_url = "google.com"
 
 with open("subdomain-wordlist.txt", "r") as wordlist:
