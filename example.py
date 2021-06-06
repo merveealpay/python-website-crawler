@@ -1,18 +1,23 @@
 import requests
 import re
+import urlparse
+
+target_url = "https://domainbigdata.com/"
+target_links = []
 
 
-def request(url):
-    try:
-        return requests.get("http://" + url)
-    except requests.exceptions.ConnectionError:
-        pass
+def extract_links(url):
+    resp = requests.get(url)
+    return re.findall('(?:href=")(.*?)"', resp.content)
 
+href_links = extract_links(target_url)
 
-target_url = "domainbigdata.com"
+for link in href_links:
+    link = urlparse.urljoin(target_url, link)
 
-resp = request(target_url)
+    if "#" in link:
+        link = link.split("#")[0]
 
-href_links = re.findall('(?:href=")(.*?)"', resp.content)
-
-print(href_links)
+    if target_url in link and link not in target_links:
+        target_links.append(link)
+        print(link)
